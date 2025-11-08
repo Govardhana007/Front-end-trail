@@ -1,0 +1,716 @@
+/* Creative frontend styles for the Search UI */
+:root {
+    --bg1: #0f172a;
+    --bg2: #0b2545;
+    --card: #0b1020dd;
+    --accent: #7c5cff;
+    --muted: rgba(255, 255, 255, 0.7);
+}
+
+* {
+    box-sizing: border-box
+}
+
+html,
+body {
+    height: 100%;
+    /* Prevent the page from scrolling — all scrolling will be inside panels (ChatGPT-like) */
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    color: #e9eef8;
+    background: linear-gradient(160deg, var(--bg1), var(--bg2) 60%);
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.wrap {
+    width: 100%;
+    max-width: 920px;
+    /* Make the app fill available vertical space and act like ChatGPT: the page itself
+       doesn't scroll — inner panels do. Reserve 80px for padding/footer area. */
+    height: calc(100vh - 80px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Make the grid fill the available wrapper height so children can scroll internally */
+.app-layout {
+    transition: grid-template-columns .28s ease, gap .18s ease;
+    /* let the grid take remaining vertical space inside .wrap so its children can scroll */
+    flex: 1 1 auto;
+    min-height: 0;
+    /* important for child overflow in flex layout */
+    display: grid;
+}
+
+.top {
+    margin-bottom: 14px;
+    text-align: center
+}
+
+.top h1 {
+    margin: 0;
+    font-size: 28px;
+    letter-spacing: -0.3px;
+}
+
+.top .sub {
+    margin: 6px 0 0;
+    color: var(--muted);
+    font-size: 14px
+}
+
+.center {
+    display: flex;
+    justify-content: center
+}
+
+.search-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02));
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+    width: 100%;
+}
+
+/* Make the right prompt/results panel independently scrollable within the constrained layout */
+.center,
+.center .search-card {
+    height: 100%;
+    overflow: auto;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    align-items: center
+}
+
+.query {
+    flex: 1;
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    color: inherit;
+    font-size: 16px;
+    outline: none;
+    transition: box-shadow .18s, transform .12s;
+}
+
+.query:focus {
+    box-shadow: 0 6px 22px rgba(124, 92, 255, 0.12);
+    transform: translateY(-2px)
+}
+
+.search-btn {
+    background: var(--accent);
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform .12s, box-shadow .12s
+}
+
+.search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(124, 92, 255, 0.18)
+}
+
+.modes {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px
+}
+
+.mode {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .15s
+}
+
+.mode:hover {
+    transform: translateY(-3px)
+}
+
+.mode.active {
+    background: linear-gradient(90deg, var(--accent), #5ab1ff);
+    color: #051025;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 6px 20px rgba(12, 14, 50, 0.6)
+}
+
+.hint {
+    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 13px
+}
+
+.results {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity .18s, transform .18s
+}
+
+.results.show {
+    opacity: 1;
+    transform: translateY(0)
+}
+
+.result-card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.015), rgba(255, 255, 255, 0.01));
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.03)
+}
+
+.result-card {
+    position: relative;
+}
+
+.result-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.remove-import {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--muted);
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.remove-import:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: #fff;
+}
+
+.result-card h3 {
+    margin: 0 0 6px 0;
+    font-size: 15px
+}
+
+.result-card p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 13px
+}
+
+.loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    --color: hsl(0, 0%, 87%);
+    --animation: 2s ease-in-out infinite;
+    min-height: 120px;
+    margin: 20px 0;
+    padding: 18px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+}
+
+.loader .circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 24px;
+    height: 24px;
+    border: solid 2px var(--color);
+    border-radius: 50%;
+    margin: 0 12px;
+    background-color: transparent;
+    animation: circle-keys var(--animation);
+}
+
+.loader .circle .dot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--color);
+    animation: dot-keys var(--animation);
+}
+
+.loader .circle .outline {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    animation: outline-keys var(--animation);
+}
+
+.circle:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.circle:nth-child(3) {
+    animation-delay: 0.6s;
+}
+
+.circle:nth-child(4) {
+    animation-delay: 0.9s;
+}
+
+.circle:nth-child(2) .dot {
+    animation-delay: 0.3s;
+}
+
+.circle:nth-child(3) .dot {
+    animation-delay: 0.6s;
+}
+
+.circle:nth-child(4) .dot {
+    animation-delay: 0.9s;
+}
+
+.circle:nth-child(1) .outline {
+    animation-delay: 0.9s;
+}
+
+.circle:nth-child(2) .outline {
+    animation-delay: 1.2s;
+}
+
+.circle:nth-child(3) .outline {
+    animation-delay: 1.5s;
+}
+
+.circle:nth-child(4) .outline {
+    animation-delay: 1.8s;
+}
+
+@keyframes circle-keys {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes dot-keys {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes outline-keys {
+    0% {
+        transform: scale(0);
+        outline: solid 24px var(--color);
+        outline-offset: 0;
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        outline: solid 0 transparent;
+        outline-offset: 24px;
+        opacity: 0;
+    }
+}
+
+/* Sidebar / import styles */
+.app-layout {
+    /* 20% / 80% two-column layout */
+    display: grid;
+    grid-template-columns: 20% 1fr;
+    gap: 18px;
+    align-items: start;
+}
+
+/* When the import area is active (focused or has content), make left frame 70% and right 30% */
+.app-layout.import-active {
+    grid-template-columns: 70% 30%;
+    gap: 18px;
+}
+
+/* When the user has imported code, collapse the left import frame so it is smaller
+   and the results panel becomes more prominent (30% / 70%). */
+.app-layout.import-collapsed {
+    grid-template-columns: 30% 70%;
+    gap: 18px;
+}
+
+.sidebar {
+    /* Sidebar will reside in the 20% column; avoid fixed px width so grid controls sizing */
+    min-width: 140px;
+    /* small minimum to keep layout usable */
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+@media (max-width:880px) {
+    .app-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    /* on small screens keep a single-column flow even when import-active */
+    .app-layout.import-active {
+        grid-template-columns: 1fr;
+    }
+
+    .app-layout.import-collapsed {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Collapsible sidebar states */
+.app-layout {
+    transition: grid-template-columns .28s ease, gap .18s ease
+}
+
+.app-layout.collapsed {
+    grid-template-columns: 0 1fr;
+    gap: 8px
+}
+
+.sidebar {
+    transition: width .28s ease, padding .18s ease, opacity .18s ease;
+    min-height: 0;
+    /* allow internal scrolling */
+    overflow: auto;
+}
+
+.sidebar.collapsed {
+    width: 0;
+    padding: 0;
+    border: 0;
+    opacity: 0;
+    pointer-events: none
+}
+
+.collapse-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 14px
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px
+}
+
+.collapse-btn:hover {
+    color: #fff
+}
+
+.sidebar h3 {
+    margin: 0 0 6px 0;
+    font-size: 16px
+}
+
+/* Reveal tab that appears when sidebar is collapsed */
+.sidebar-tab {
+    position: fixed;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 60;
+    background: var(--accent);
+    color: #051025;
+    border-radius: 999px;
+    padding: 8px 10px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(12, 14, 50, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 6px
+}
+
+.sidebar-tab svg {
+    display: block
+}
+
+.sidebar-tab.show {
+    display: flex
+}
+
+
+.side-desc {
+    margin: 0 0 10px;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 13px
+}
+
+.import-area {
+    width: 100%;
+    min-height: 160px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: transparent;
+    color: inherit;
+    font-family: monospace;
+    font-size: 13px;
+    resize: vertical;
+}
+
+.sidebar-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px
+}
+
+.btn {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer
+}
+
+.import-btn {
+    background: linear-gradient(90deg, var(--accent), #5ab1ff);
+    color: #051025;
+    border: none
+}
+
+.import-status {
+    margin-top: 8px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7)
+}
+
+.imported-code {
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: rgba(2, 6, 23, 0.4);
+    padding: 10px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 13px;
+    color: #e8f0ff
+}
+
+/* Make imported code scrollable inside the result card so long files don't push layout */
+.imported-code {
+    max-height: calc(60vh - 160px);
+    /* keep it within viewport with some headroom */
+    overflow: auto;
+}
+
+.empty {
+    padding: 18px;
+    color: rgba(255, 255, 255, 0.65);
+    text-align: center
+}
+
+.foot {
+    margin-top: 12px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px
+}
+
+.visually-hidden {
+    position: absolute !important;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    white-space: nowrap
+}
+
+@media (max-width:520px) {
+    .top h1 {
+        font-size: 20px
+    }
+
+    .query {
+        font-size: 15px
+    }
+
+    .modes {
+        flex-direction: column
+    }
+}
+
+/* ------------------------------
+     Uiverse background (scoped)
+     From Uiverse.io by chase2k25 — wrapped in .uiverse-bg to avoid collisions
+     ------------------------------ */
+.uiverse-bg .container {
+    position: fixed;
+    /* keep it behind the UI */
+    inset: 0;
+    background: #181c21;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    z-index: -1;
+}
+
+.uiverse-bg .pattern-bg {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: repeating-linear-gradient(135deg,
+            #232526 0px,
+            #232526 60px,
+            #23252699 70px,
+            #414345 130px);
+}
+
+.uiverse-bg .cube-svg {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    left: -30%;
+    top: -20%;
+    background: transparent;
+    opacity: 0.7;
+    z-index: 1;
+    animation: cubeMove 18s linear infinite alternate;
+}
+
+@keyframes cubeMove {
+    from {
+        transform: translateY(0) scale(1)
+    }
+
+    to {
+        transform: translateY(-20%) scale(1.02) rotate(1deg)
+    }
+}
+
+/* Glass radio group (scoped to search-card to fit nicely) */
+.search-card .glass-radio-group {
+    --bg: rgba(255, 255, 255, 0.06);
+    --text: #e5e5e5;
+    display: flex;
+    position: relative;
+    background: var(--bg);
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: inset 1px 1px 4px rgba(255, 255, 255, 0.06), inset -1px -1px 6px rgba(0, 0, 0, 0.25), 0 6px 18px rgba(0, 0, 0, 0.18);
+    overflow: hidden;
+    width: fit-content;
+    margin: 12px 0;
+}
+
+.search-card .glass-radio-group input {
+    display: none
+}
+
+.search-card .glass-radio-group label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 68px;
+    font-size: 13px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    color: var(--text);
+    position: relative;
+    z-index: 2;
+    transition: color .22s ease-in-out
+}
+
+.search-card .glass-radio-group label:hover {
+    color: #fff
+}
+
+.search-card .glass-radio-group input:checked+label {
+    color: #fff
+}
+
+.search-card .glass-glider {
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    width: calc(100% / 2);
+    border-radius: .9rem;
+    z-index: 1;
+    transition: transform .36s cubic-bezier(.37, 1.95, .66, .56), background .3s ease, box-shadow .3s ease
+}
+
+/* checked states */
+#glass-silver:checked~.glass-glider {
+    transform: translateX(0%);
+    background: linear-gradient(135deg, #c0c0c055, #e0e0e0);
+    box-shadow: 0 0 18px rgba(192, 192, 192, 0.35)
+}
+
+#glass-gold:checked~.glass-glider {
+    transform: translateX(100%);
+    background: linear-gradient(135deg, #ffd70055, #ffcc00);
+    box-shadow: 0 0 18px rgba(255, 215, 0, 0.35)
+}
+
+/* Make it slightly smaller on mobile */
+@media (max-width:520px) {
+    .search-card .glass-radio-group label {
+        min-width: 64px;
+        padding: .45rem .8rem;
+        font-size: 13px
+    }
+}

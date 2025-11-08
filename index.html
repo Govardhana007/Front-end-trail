@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search — Code / Study</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- From Uiverse.io by chase2k25 (scoped to .uiverse-bg so it doesn't clash with app styles) -->
+    <div class="uiverse-bg" aria-hidden="true">
+        <div class="container">
+            <div class="pattern-bg">
+                <svg preserveAspectRatio="xMidYMid slice" height="100%" width="100%" class="cube-svg"
+                    viewBox="0 0 120 104">
+                    <defs>
+                        <linearGradient y2="100%" x2="100%" y1="0%" x1="0%" id="cube-dark">
+                            <stop stop-color="#232526" offset="0%"></stop>
+                            <stop stop-color="#414345" offset="100%"></stop>
+                        </linearGradient>
+                        <linearGradient y2="0%" x2="100%" y1="100%" x1="0%" id="cube-mid">
+                            <stop stop-color="#4b6cb7" offset="0%"></stop>
+                            <stop stop-color="#182848" offset="100%"></stop>
+                        </linearGradient>
+                        <linearGradient y2="100%" x2="0%" y1="0%" x1="100%" id="cube-light">
+                            <stop stop-color="#a8edea" offset="0%"></stop>
+                            <stop stop-color="#fed6e3" offset="100%"></stop>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="wrap">
+        <div class="app-layout">
+            <aside class="sidebar" aria-label="Code import">
+                <div class="sidebar-header">
+                    <h3>Import Code</h3>
+                    <button id="collapseBtn" class="collapse-btn" aria-label="Collapse sidebar">◀</button>
+                </div>
+                <p class="side-desc">Paste code or upload a file. Click <strong>Import</strong> to add it to results.
+                </p>
+                <textarea id="importArea" class="import-area" placeholder="Paste or drop your code here..."
+                    aria-label="Import code area"></textarea>
+                <div class="sidebar-actions">
+                    <input id="fileInput" type="file" accept=".js,.py,.java,.txt" hidden>
+                    <button id="chooseFile" class="btn">Upload file</button>
+                    <button id="importBtn" class="btn import-btn">Import</button>
+                </div>
+                <div id="importStatus" class="import-status" aria-live="polite"></div>
+            </aside>
+
+            <main class="center">
+                <section class="search-card" aria-labelledby="search-heading">
+                    <h2 id="search-heading" class="visually-hidden">Search</h2>
+
+                    <div class="search-box" role="search">
+                        <input id="query" class="query" type="search"
+                            placeholder="Try: javascript async, linear algebra, python tips..."
+                            aria-label="Search input" autocomplete="off">
+                        <button id="searchBtn" class="search-btn" aria-label="Search">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="7"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Replaced old buttons with glass radio group -->
+                    <div class="glass-radio-group" role="radiogroup" aria-label="Search mode">
+                        <input type="radio" name="plan" id="glass-silver" checked />
+                        <label for="glass-silver">Code</label>
+
+                        <input type="radio" name="plan" id="glass-gold" />
+                        <label for="glass-gold">Study</label>
+
+                        <div class="glass-glider"></div>
+                    </div>
+
+                    <div id="hint" class="hint">Tip: press ← → to switch modes or type and press Enter.</div>
+
+                    <div id="loader" class="loader" style="display: none;">
+                        <div class="circle">
+                            <div class="dot"></div>
+                            <div class="outline"></div>
+                        </div>
+                        <div class="circle">
+                            <div class="dot"></div>
+                            <div class="outline"></div>
+                        </div>
+                        <div class="circle">
+                            <div class="dot"></div>
+                            <div class="outline"></div>
+                        </div>
+                        <div class="circle">
+                            <div class="dot"></div>
+                            <div class="outline"></div>
+                        </div>
+                    </div>
+
+                    <div id="results" class="results" aria-live="polite"></div>
+                </section>
+            </main>
+        </div>
+
+        <footer class="foot">
+            <small>Frontend only — backend hookup will call
+                <code>/api/search?mode=&lt;code|study&gt;&q=&lt;query&gt;</code></small>
+        </footer>
+    </div>
+
+    <script src="main.js" defer></script>
+
+</body>
+
+</html>
